@@ -3,13 +3,16 @@ import {Page, Platform} from 'ionic-angular';
 
 @Injectable()
 export class FbProvider {
+    private _plugin = (window as any).facebookConnectPlugin;
+    
     constructor(public platform: Platform ) {
     }
 
     login() {
         let p = new Promise((resolve, reject) => {
+            
         if(this.platform.is('cordova')) {
-            (window as any).facebookConnectPlugin.login(['email'], (success) => {
+            this._plugin.login(['email'], (success) => {
                     console.log(JSON.stringify(success));
                     resolve(success);
                 },(err) => {
@@ -27,7 +30,7 @@ export class FbProvider {
    
     getCurrentUserProfile() {
         let p = new Promise((resolve, reject) => {
-            (window as any).facebookConnectPlugin.api('me?fields=email,name', null,
+            this._plugin.api('me?fields=email,name', null,
             (profileData) => {
                 console.log(JSON.stringify(profileData));
                 resolve(profileData);
